@@ -12,9 +12,9 @@ Server* Server_connect(uint16_t port, uint32_t addr) {
     server->socket_fd = socket(AF_INET, SOCK_STREAM, 0);
     if(server->socket_fd < 0) { free(server); return nullptr; }
     server->addr = (struct sockaddr_in){
-        AF_INET,
-        htons(port),
-        htonl(addr)
+        .sin_family = AF_INET,
+        .sin_port = htons(port),
+        .sin_addr = { .s_addr = htonl(addr) }
     };
     int atmpts = 10;
     

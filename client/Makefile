@@ -14,12 +14,12 @@ AS  := clang
 # Compiler Flags
 WARNINGS := -Wall -Wextra -Wpedantic
 
-CFLAGS   := -std=c23 $(WARNINGS) -I$(INCLUDE_DIR) -MMD -MP -lcurses
+CFLAGS   := -std=c23 $(WARNINGS) -I$(INCLUDE_DIR) -MMD -MP
 CXXFLAGS := -std=c++23 $(WARNINGS) -I$(INCLUDE_DIR) -MMD -MP
 ASFLAGS  := -I$(INCLUDE_DIR) -MMD -MP
 
 LDFLAGS  :=
-LDLIBS   :=
+LDLIBS   := -lcurses
 
 # Source Discovery
 C_SOURCES   := $(shell find $(SRC_DIR) -type f -name '*.c')
