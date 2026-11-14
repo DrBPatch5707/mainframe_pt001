@@ -77,10 +77,14 @@ char Display_get_char(Display* dsp, int win, Special_char* sc) {
     return '\0';
 }
 
+
+/*
 void Display_draw_terminal(Display* dsp, int win) {
     echo();
     box(dsp->windows[win], 0, 0);
 }
+*/
+
 
 void Display_update(Display* dsp, int win) { if(win >= 0 && win < dsp->amt_windows) wrefresh(dsp->windows[win]); }
 
@@ -99,13 +103,5 @@ int Display_new_window(Display* dsp, int h, int w, int y, int x) {
 
 void Display_move_cursor(Display* dsp, int win, int x, int y) {
     // TODO: add return value checks
-    
-    int result = wmove(dsp->windows[win], y, x);
-    /*
-    int h, w;
-    Display_getsize(dsp, win, &w, &h);
-    char buf[480];
-    snprintf(buf, 480, "x: %d, y: %d, result: %d, h: %d, w: %d", x, y, result, h, w);
-    addstr(buf);
-    */
+    wmove(dsp->windows[win], y, x);
 }

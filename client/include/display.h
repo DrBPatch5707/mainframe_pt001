@@ -20,7 +20,7 @@ typedef enum Special_char{
 }Special_char;
 
 Display* Display_init();
-void Display_draw_terminal(Display*, int win);
+//void Display_draw_terminal(Display*, int win);
 void Display_destroy(Display*);
 void Display_clear(Display*, int win);
 int Display_new_window(Display*, int h, int w, int y, int x);

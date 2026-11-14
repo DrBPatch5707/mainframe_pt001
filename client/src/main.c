@@ -52,50 +52,26 @@ int main(){
 }
 
 
-
+/*
+ * DESIGN CHANGE: Terminal UI -> Dispatch UI
+ *
+ * Decided to replace the terminal-style interface with a simpler
+ * ncurses UI containing a dedicated dispatch input field.
+ *
+ * Since dispatch codes are limited to 5 characters, implementing
+ * a full terminal with cursor movement, wrapping, and text editing
+ * adds unnecessary complexity.
+ *
+ * The new interface will collect a dispatch code and pass it to
+ * the dispatch system to determine which tool to launch.
+ *
+ * Keep the reusable ncurses display, window management, and input
+ * abstractions. Only remove the terminal-specific functionality.
+ *
+ * IMPORTANT: The original terminal implementation was committed
+ * to Git before removal. It can be recovered or branched from
+ * later if needed.
+ */
 Dispatch dispatch(Display* dsp) {
-    DispatchEntry* de = NULL;
-    init_hm(de);
-    const int win = 0;
-    int X_MAX, X_MIN = 2;//TODO: make dynamic later
-    int Y_MAX, Y_MIN = 2;//<^
-    Display_getsize(dsp, win, &X_MAX, &Y_MAX); Y_MAX -= 2; X_MAX -= 2;
-    int cx = X_MIN, cy = Y_MIN;
-    bool _exit = false;
-    Dispatch dispatch = UNKNOWN_TOOL;
-    Special_char sc = UNKNOWN;
-    Display_draw_terminal(dsp, win);
-    Display_move_cursor(dsp, win, cx, cy);
-    Display_update(dsp, win);
     
-    while (!_exit)
-    {
-        char ch = Display_get_char(dsp, win, &sc);
-        if(ch == '\0') {
-            switch (sc)
-            {
-            case ENTER:
-                char d[6] = {'\0'};
-                Display_get_buffer(dsp, win, d, X_MIN, Y_MIN, 5, Y_MIN, Y_MAX, X_MIN, X_MAX); ///TODO: verify return
-                dispatch = shget(de, d);
-                break;
-            
-            default:
-                break;
-            }
-        }else {
-            cx++;
-        }
-        if(dispatch != UNKNOWN_TOOL) _exit = true;
-
-        if(cx >= X_MAX) cy++;
-        else if (cx <= X_MIN) cy--;
-        cx = wrap(cx, X_MAX, X_MIN);
-        cy = wrap(cy, Y_MAX, Y_MIN);
-        Display_move_cursor(dsp, win, cx, cy); //wasteful
-        Display_update(dsp, win);
-    }
-    
-    shfree(de);
-    return dispatch;
 }
