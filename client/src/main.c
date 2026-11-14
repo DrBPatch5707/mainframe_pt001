@@ -53,25 +53,19 @@ int main(){
 
 
 /*
- * DESIGN CHANGE: Terminal UI -> Dispatch UI
- *
- * Decided to replace the terminal-style interface with a simpler
- * ncurses UI containing a dedicated dispatch input field.
- *
- * Since dispatch codes are limited to 5 characters, implementing
- * a full terminal with cursor movement, wrapping, and text editing
- * adds unnecessary complexity.
- *
- * The new interface will collect a dispatch code and pass it to
- * the dispatch system to determine which tool to launch.
- *
- * Keep the reusable ncurses display, window management, and input
- * abstractions. Only remove the terminal-specific functionality.
- *
- * IMPORTANT: The original terminal implementation was committed
- * to Git before removal. It can be recovered or branched from
- * later if needed.
- */
+* DESIGN CHANGE: Terminal UI -> Dispatch UI
+*
+* Decided to replace the terminal-style interface with a simpler
+* ncurses UI containing a dedicated dispatch input field.
+*
+* Since dispatch codes are limited to 5 characters, implementing
+* a full terminal with cursor movement, wrapping, and text editing
+* adds unnecessary complexity.
+*
+*(I had AI summarize my idea into this message
+*so that I don't forget what I was doing when I look at this project again.)
+*
+*/
 Dispatch dispatch(Display* dsp) {
     
 }
