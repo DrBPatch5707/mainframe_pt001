@@ -19,7 +19,7 @@ CXXFLAGS := -std=c++23 $(WARNINGS) -I$(INCLUDE_DIR) -MMD -MP
 ASFLAGS  := -I$(INCLUDE_DIR) -MMD -MP
 
 LDFLAGS  :=
-LDLIBS   := -lcurses
+LDLIBS   := -lcurses -lm
 
 # Source Discovery
 C_SOURCES   := $(shell find $(SRC_DIR) -type f -name '*.c')
