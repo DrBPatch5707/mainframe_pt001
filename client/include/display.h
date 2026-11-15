@@ -20,17 +20,19 @@ typedef enum Special_char{
 }Special_char;
 
 Display* Display_init();
-//void Display_draw_terminal(Display*, int win);
+void Display_draw_border(Display*, int win);
 void Display_destroy(Display*);
 void Display_clear(Display*, int win);
 int Display_new_window(Display*, int h, int w, int y, int x);
 void Display_update(Display*, int win);
 char Display_get_char(Display* dsp, int win, Special_char* sc);
-void Display_move_cursor(Display*, int win, int x, int y);
+void Display_move_cursor(Display* dsp, int win, int x, int y);
+void Display_delete_window(Display*dsp, int win);
 
 
-void Display_getsize(Display* dsp, int win, int* w, int* h);
 
+void Display_getsize_win(Display* dsp, int win, int* w, int* h);
+void Display_getsize_Scr(int* w, int* h);
 
 /**
  * @brief Copies characters from an ncurses window into a buffer.

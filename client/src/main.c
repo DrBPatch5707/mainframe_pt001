@@ -52,20 +52,21 @@ int main(){
 }
 
 
-/*
-* DESIGN CHANGE: Terminal UI -> Dispatch UI
-*
-* Decided to replace the terminal-style interface with a simpler
-* ncurses UI containing a dedicated dispatch input field.
-*
-* Since dispatch codes are limited to 5 characters, implementing
-* a full terminal with cursor movement, wrapping, and text editing
-* adds unnecessary complexity.
-*
-*(I had AI summarize my idea into this message
-*so that I don't forget what I was doing when I look at this project again.)
-*
-*/
+
+
 Dispatch dispatch(Display* dsp) {
+    DispatchEntry* de = NULL;
+    init_hm(de);
+    int W,H;
+    Display_getsize_Scr(W, H);
+    int win = Display_new_window(dsp, H, W, 0, 0);
+    Display_draw_border(dsp, win);
+
+
+
+
+
+
+
     
 }

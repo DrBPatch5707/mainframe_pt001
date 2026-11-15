@@ -2,11 +2,13 @@
 #include<curses.h>
 #include<locale.h>
 #include<stdlib.h>
+#include<stb_ds.h>
 
 struct Display {
     WINDOW** windows;
     int max_windows;
     int amt_windows;
+    int* recyclable_windows;
     SCREEN* screen;
 };
 
@@ -26,6 +28,7 @@ Display* Display_init() {
     nodelay(display->windows[0], TRUE);
     keypad(display->windows[0], TRUE); //we'll start with the initial window
     wrefresh(display->windows[0]);
+    display->recyclable_windows = NULL;
     return display;
 }
 
@@ -42,7 +45,8 @@ void Display_destroy(Display* obj) {
     free(obj);
 }
 
-void Display_getsize(Display* dsp, int win, int* w, int* h) { getmaxyx(dsp->windows[win], *h, *w); }
+void Display_getsize_win(Display* dsp, int win, int* w, int* h) { getmaxyx(dsp->windows[win], *h, *w); }
+void Display_getsize_Scr(int* w, int* h) { *w = COLS; *h = LINES; }
 
 int Display_get_buffer(Display* dsp, int win, char* dest, int x, int y, int size , int h_min, int h_max, int w_min, int w_max) {
     int i = 0;
@@ -78,12 +82,9 @@ char Display_get_char(Display* dsp, int win, Special_char* sc) {
 }
 
 
-/*
-void Display_draw_terminal(Display* dsp, int win) {
-    echo();
-    box(dsp->windows[win], 0, 0);
-}
-*/
+
+void Display_draw_border(Display* dsp, int win) { box(dsp->windows[win], 0, 0); }
+
 
 
 void Display_update(Display* dsp, int win) { if(win >= 0 && win < dsp->amt_windows) wrefresh(dsp->windows[win]); }
@@ -91,14 +92,23 @@ void Display_update(Display* dsp, int win) { if(win >= 0 && win < dsp->amt_windo
 
 int Display_new_window(Display* dsp, int h, int w, int y, int x) {
     //TODO: Perform checks for all this, especially the reallocation.
-    if(dsp->amt_windows + 1 > dsp->max_windows) {
+    int newindex = -1;
+    if(arrlen(dsp->recyclable_windows) > 0) newindex = arrpop(dsp->recyclable_windows);
+    else if(dsp->amt_windows + 1 > dsp->max_windows) {
         dsp->windows = realloc(dsp->windows, (sizeof(WINDOW*) * (dsp->max_windows + 10)));
         dsp->max_windows += 10;
     }
-    dsp->windows[dsp->amt_windows] = newwin(h, w, y, x);
-    nodelay(dsp->windows[dsp->amt_windows], TRUE);
-    dsp->amt_windows++;
-    return dsp->amt_windows - 1;
+    if(newindex == -1) { newindex = dsp->amt_windows; dsp->amt_windows++; }
+    dsp->windows[newindex] = newwin(h, w, y, x);
+    nodelay(dsp->windows[newindex], TRUE);
+    return newindex;
+}
+
+void Display_delete_window(Display*dsp, int win) {
+    if(dsp->windows[win] == NULL) return;
+    delwin(dsp->windows[win]);// TODO: add return value check
+    arrput(dsp->recyclable_windows, win);
+    dsp->windows[win] = NULL;
 }
 
 void Display_move_cursor(Display* dsp, int win, int x, int y) {
