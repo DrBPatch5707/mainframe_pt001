@@ -16,6 +16,7 @@ typedef enum Special_char{
     ARROW_DOWN = 2,
     ARROW_RIGHT = 3,
     ARROW_LEFT = 4,
+    BACKSPACE = 5,
     
 }Special_char;
 
@@ -29,10 +30,15 @@ char Display_get_char(Display* dsp, int win, Special_char* sc);
 void Display_move_cursor(Display* dsp, int win, int x, int y);
 void Display_delete_window(Display*dsp, int win);
 
-
+void Display_Backspace(Display* dsp, int win);
 
 void Display_getsize_win(Display* dsp, int win, int* w, int* h);
 void Display_getsize_Scr(int* w, int* h);
+
+void Display_write(Display* dsp, int win, char* txt, int size);
+void Display_write_ch(Display* dsp, int win, char ch);
+
+void Display_hide_cursor();
 
 /**
  * @brief Copies characters from an ncurses window into a buffer.

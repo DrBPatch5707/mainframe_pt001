@@ -12,6 +12,8 @@ struct Display {
     SCREEN* screen;
 };
 
+chtype ch_cht(char ch) { return (chtype)(unsigned char)ch; }
+char cht_ch(chtype cht) { return (char)(cht & A_CHARTEXT); }
 
 Display* Display_init() {
     //TODO: Implement proper checks for all of this.
@@ -64,6 +66,7 @@ char Display_get_char(Display* dsp, int win, Special_char* sc) {
     *sc = UNKNOWN;
     int ch = wgetch(dsp->windows[win]);
     if(ch >= 32 && ch <= 126) return (char)ch;
+    if((char)ch == '\n' || (char)ch == '\r') { *sc = ENTER; return '\0';}
     switch (ch)// DON'T FORGET TO DEREFERANCE SC!!!
     {
     case ERR:
@@ -74,6 +77,13 @@ char Display_get_char(Display* dsp, int win, Special_char* sc) {
         *sc = ENTER;
         break;
     
+    case KEY_BACKSPACE:
+        *sc = BACKSPACE;
+        break;
+    case 127:
+        *sc = BACKSPACE;
+        break;
+
     default:
         *sc = UNKNOWN;
         break;
@@ -81,7 +91,14 @@ char Display_get_char(Display* dsp, int win, Special_char* sc) {
     return '\0';
 }
 
-
+void Display_Backspace(Display* dsp, int win) {
+    int x, y;
+    getyx(dsp->windows[win], y, x);
+    x--;
+    wmove(dsp->windows[win], y, x);
+    waddch(dsp->windows[win], (chtype)' ');
+    wmove(dsp->windows[win], y, x);
+}
 
 void Display_draw_border(Display* dsp, int win) { box(dsp->windows[win], 0, 0); }
 
@@ -115,3 +132,13 @@ void Display_move_cursor(Display* dsp, int win, int x, int y) {
     // TODO: add return value checks
     wmove(dsp->windows[win], y, x);
 }
+void Display_write(Display* dsp, int win, char* txt, int size) {
+    // TODO: add return value checks
+    waddnstr(dsp->windows[win], txt, size);
+}
+void Display_write_ch(Display* dsp, int win, char ch) {
+    // TODO: add return value checks
+    waddch(dsp->windows[win], ch_cht(ch));
+}
+
+void Display_hide_cursor() { curs_set(0); }
