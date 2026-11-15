@@ -19,6 +19,7 @@ DispatchEntry* init_dispatch_hm() {
     sh_new_arena(de);
     shdefault(de, defaultDispatch);
     shput(de, "exit", exitDispatch);
+    shput(de, "users", usersDispatch);
     //others
     return de;
 }
@@ -30,6 +31,11 @@ int defaultDispatch(DispatchArgs*) {
 
 int exitDispatch(DispatchArgs*) {
     return -2;
+}
+
+int usersDispatch(DispatchArgs*) {
+    
+    return 0;
 }
 
 

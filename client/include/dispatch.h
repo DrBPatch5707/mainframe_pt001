@@ -21,4 +21,6 @@ int dispatch(Display*, DispatchArgs* args);
 int defaultDispatch(DispatchArgs*);
 
 int exitDispatch(DispatchArgs*);
+
+int usersDispatch(DispatchArgs*);
 #endif // __DISPATCH_H__
